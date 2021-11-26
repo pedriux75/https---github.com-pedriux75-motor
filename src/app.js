@@ -1,5 +1,6 @@
 import * as THREE from '../node_modules/three/build/three.module.js';
-import Scene1 from "./scenes/Scene1.js";
+import Scene1 from './scenes/Scene1.js';
+import Product from './products/Product.js';
 
 const container = document.querySelector('#motor-content');
 
@@ -9,7 +10,9 @@ let plane;
 let pointer, raycaster, isShiftDown = false;
 
 let rollOverMesh;
-let cubeGeo, cubeMaterial;
+// let cubeGeo, cubeMaterial;
+
+let controls;
 
 const objects = [];
 
@@ -34,8 +37,30 @@ function init() {
     camera.position.set( 500, 800, 1300 );
     camera.lookAt( 0, 0, 0 );
 
-    // RENDER
+    // ROLL-OVER HELPERS --> te dice donde colocar el objeto
+    let product = new Product();
+    rollOverMesh = product.createRollOver();
+    scene.add(rollOverMesh);
+    
+    
+    raycaster = new THREE.Raycaster();
+    pointer = new THREE.Vector2(); // devuelve las cordenadas del puntero
 
+    const geometry = new THREE.PlaneGeometry(1000, 1000);
+    geometry.rotateX(-Math.PI / 2);
+
+    plane = new THREE.Mesh(
+      geometry,
+      new THREE.MeshBasicMaterial({ visible: false })
+      
+    );
+    scene.add(plane);
+
+    objects.push(plane);
+    console.log(objects);
+
+
+    // RENDER
     renderer = new THREE.WebGLRenderer({ 
         antialias: true,
         canvas: container
@@ -49,8 +74,7 @@ function init() {
     document.addEventListener( 'keydown', onDocumentKeyDown );
     document.addEventListener( 'keyup', onDocumentKeyUp );
 
-    //
-
+    // EVENT LISTENER --> RESIZE
     window.addEventListener( 'resize', onWindowResize );
     
 
@@ -76,12 +100,14 @@ function onPointerMove( event ) {
     raycaster.setFromCamera( pointer, camera );
 
     const intersects = raycaster.intersectObjects( objects, false );
-
+    
     if ( intersects.length > 0 ) {
 
         const intersect = intersects[ 0 ];
 
         rollOverMesh.position.copy( intersect.point ).add( intersect.face.normal );
+        
+        // Pararesolver colisiones
         rollOverMesh.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
 
     }
@@ -94,11 +120,11 @@ function onPointerMove( event ) {
 function onPointerDown( event ) {
 
     pointer.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
-
+    
     raycaster.setFromCamera( pointer, camera );
-
+    
     const intersects = raycaster.intersectObjects( objects, false );
-
+    
     if ( intersects.length > 0 ) {
 
         const intersect = intersects[ 0 ];
@@ -119,7 +145,7 @@ function onPointerDown( event ) {
 
         } else {
 
-            const voxel = new THREE.Mesh( cubeGeo, cubeMaterial );
+            const voxel = new Product();
             voxel.position.copy( intersect.point ).add( intersect.face.normal );
             voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
             scene.add( voxel );
@@ -158,12 +184,13 @@ function onDocumentKeyUp( event ) {
 }
 
 
+
 function render() {
 
     // OrbitControls
     // requestAnimationFrame(render);
     // controls.update();
-
+    
     renderer.render( scene, camera );
 
 }
