@@ -2,8 +2,6 @@ import * as THREE from "../../node_modules/three/build/three.module.js";
 
 class Scene1 extends THREE.Scene {
   
-
-  
   constructor() {
     super();
     this.create();
