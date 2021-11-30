@@ -1,4 +1,5 @@
 import * as THREE from '../node_modules/three/build/three.module.js';
+// import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
 import Scene1 from './scenes/Scene1.js';
 import Product from './products/Product.js';
 
@@ -57,6 +58,7 @@ function init() {
     scene.add(plane);
 
     objects.push(plane);
+    // objects[0].name = 'NOMBRE_MUEBLE'; --> REALIZAR PETICION A LA BBDD para insetar nombre
     console.log(objects);
 
 

@@ -11,7 +11,7 @@ class Scene1 extends THREE.Scene {
   create(){
 
     // GRID - rejilla
-    const gridHelper = new THREE.GridHelper(1000, 20);
+    const gridHelper = new THREE.GridHelper(1000, 1);
     this.add(gridHelper);
     
 
