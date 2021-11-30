@@ -46,6 +46,7 @@ function init() {
     
     raycaster = new THREE.Raycaster();
     pointer = new THREE.Vector2(); // devuelve las cordenadas del puntero
+    // console.log(pointer);
 
     const geometry = new THREE.PlaneGeometry(1000, 1000);
     geometry.rotateX(-Math.PI / 2);
@@ -151,6 +152,8 @@ function onPointerDown( event ) {
             // Hacer petición a la BBDD para recoger medidas
 
             voxel.position.copy( intersect.point ).add( intersect.face.normal );
+            console.log(intersect.point);
+            console.log(intersect.face.normal);
             voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 ); // ancho x alto x grosor
             scene.add( voxel );
 
