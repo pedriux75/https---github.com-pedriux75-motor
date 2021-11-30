@@ -13,7 +13,7 @@ let pointer, raycaster, isShiftDown = false;
 let rollOverMesh;
 // let cubeGeo, cubeMaterial;
 
-let controls;
+let controls, reloj;
 
 const objects = [];
 
@@ -52,13 +52,13 @@ function init() {
 
     plane = new THREE.Mesh(
       geometry,
-      new THREE.MeshBasicMaterial({ visible: false })
+      new THREE.MeshBasicMaterial({ visible: true })
       
     );
     scene.add(plane);
 
     objects.push(plane);
-    // objects[0].name = 'NOMBRE_MUEBLE'; --> REALIZAR PETICION A LA BBDD para insetar nombre
+    // objects[0].name = 'NOMBRE_MUEBLE'; --> REALIZAR PETICION A LA BBDD para insetar
     console.log(objects);
 
 
@@ -131,7 +131,7 @@ function onPointerDown( event ) {
 
         const intersect = intersects[ 0 ];
 
-        // delete cube
+        // DELETE CUBE
 
         if ( isShiftDown ) {
 
@@ -143,13 +143,15 @@ function onPointerDown( event ) {
 
             }
 
-            // create cube
+            // CREATE CUBE
 
         } else {
 
             const voxel = new Product();
+            // Hacer petición a la BBDD para recoger medidas
+
             voxel.position.copy( intersect.point ).add( intersect.face.normal );
-            voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+            voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 ); // ancho x alto x grosor
             scene.add( voxel );
 
             objects.push( voxel );
@@ -185,14 +187,12 @@ function onDocumentKeyUp( event ) {
 
 }
 
-
-
 function render() {
 
     // OrbitControls
     // requestAnimationFrame(render);
     // controls.update();
-    
+
     renderer.render( scene, camera );
 
 }
